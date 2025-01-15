@@ -376,10 +376,8 @@ void *receiveData(void) {
             printf("\n");
             Data_Analyzing(recv_buf);
             memset(recv_buf, 0, buffer_size);
+            usleep(1);
         } 
-        else {
-            sleep(1);
-            }
         
 
     }
