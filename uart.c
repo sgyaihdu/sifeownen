@@ -256,32 +256,69 @@ void Distance_Analyzing(char *recv_buf)
     sprintf(result, "%02X", recv_buf[5]);
     int decimal_fraction = hex_to_decimal(&result);
     memset(result, 0, 20);
-    sprintf(result, "%d.%d", Integer_number, decimal_fraction);
-    data_references.grade = atof(result);
-    printf("测距值: %.1f\n", data_references.grade);
+    sprintf(result, "%d%d", Integer_number, decimal_fraction);
+    int size = strlen(result);
+     for(int i = 0; i < size; i++) {
+        data_references.data[i] = result[i] - '0';
+    }
+    
+    printf("测距值 %s\n 分解后: ", result);
+    for(int i = 0; i < size; i++) {
+        printf("%d ", data_references.data[i]);
+    }
+    printf("\n");
 }
 
 void Date_Analyzing(char *recv_buf)
 {
     char data[20] = {0};
-    sprintf(data, "%02d/%02d/%02d", recv_buf[3],recv_buf[4],recv_buf[5]);
-    strcpy(data_references.year, data);
+    sprintf(data, "%02d%02d%02d", recv_buf[3],recv_buf[4],recv_buf[5]);
+    strcpy(data_references.data, data);
+    int size = strlen(data);
+    for(int i = 0; i < size; i++) {
+        data_references.data[i] = data[i] - '0';
+    }
+    printf("日期 %s\n 分解后: ", data);
+    for(int i = 0; i < size; i++) {
+        printf("%d ", data_references.data[i]);
+    }
+    printf("\n");
     //printf("日期: %s\n", data_references.year);
 }
 
 void Time_Analyzing(char *recv_buf)
 {
     char time[20] = {0};
-    sprintf(time, "%02d:%02d:%02d", recv_buf[3],recv_buf[4],recv_buf[5]);
-    strcpy(data_references.time, time);
-    //printf("时间: %s\n", data_references.time);
+    sprintf(time, "%02d%02d%02d", recv_buf[3],recv_buf[4],recv_buf[5]);
+    int size = strlen(time);
+    for(int i = 0; i < size; i++) {
+        data_references.time[i] = time[i] - '0';
+    }
+    printf("时间%s\n 分解后: ",time);
+    for(int i = 0; i < size; i++) {
+        printf("%d ", data_references.time[i]);
+    }
+    printf("\n");
+    // strcpy(data_references.time, time);
+    // printf("时间: %s\n", data_references.time);
 }
 void Battery_Analyzing(char *recv_buf)
 {
     char result[20] = {0};
     sprintf(result, "%02X", recv_buf[3]);
     int Integer_number = hex_to_decimal(result);
-    data_references.battery = Integer_number;
+    memset(result, 0, 20);
+    sprintf(result, "%d", Integer_number);
+    int size = strlen(result);
+    for(int i = 0; i < size; i++) {
+        data_references.battery[i] = result[i] - '0';
+    }
+    printf("电量 %s\n 分解后: ", result);
+    for(int i = 0; i < size; i++) {
+        printf("%d ", data_references.battery[i]);
+    }
+    printf("\n");
+    //data_references.battery = Integer_number;
     //printf("电量: %d%%\n", data_references.battery);
 
 }
@@ -295,11 +332,11 @@ void State_judgment(char *recv_buf)
 
         case 0x02:
             // printf("超程\n");
-            data_references.grade= 0;
+            data_references.distance[0]= 0;
             // printf("测距值: %d\n", (int)data_references.grade);
             break;
         case 0x03:
-            data_references.grade= 0;
+            data_references.distance[0]= 0;
             // printf("欠光\n");
             // printf("测距值: %d\n", (int)data_references.grade);
             break;
@@ -424,7 +461,6 @@ int main()
         printf("pthread_create fail\n");
         return -1 ;
     }
-    sleep(1);
     pthread_join(tid,NULL);
     close(fd);
     return 0;
