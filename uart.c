@@ -15,10 +15,10 @@
 int fd ;
 
 struct parameter {
-    char year[20];       // 年月日
-    char time[20];        // 时分秒
-    float grade;        // 距离
-    int battery;        //电池电量
+    int data[6];       // 年月日
+    int time[6];        // 时分秒
+    int distance[6];        // 距离
+    int battery[3];        //电池电量
 };
 
 struct parameter data_references = {0};
@@ -259,12 +259,12 @@ void Distance_Analyzing(char *recv_buf)
     sprintf(result, "%d%d", Integer_number, decimal_fraction);
     int size = strlen(result);
      for(int i = 0; i < size; i++) {
-        data_references.data[i] = result[i] - '0';
+        data_references.distance[i] = result[i] - '0';
     }
     
     printf("测距值 %s\n 分解后: ", result);
     for(int i = 0; i < size; i++) {
-        printf("%d ", data_references.data[i]);
+        printf("%d ", data_references.distance[i]);
     }
     printf("\n");
 }
@@ -273,7 +273,6 @@ void Date_Analyzing(char *recv_buf)
 {
     char data[20] = {0};
     sprintf(data, "%02d%02d%02d", recv_buf[3],recv_buf[4],recv_buf[5]);
-    strcpy(data_references.data, data);
     int size = strlen(data);
     for(int i = 0; i < size; i++) {
         data_references.data[i] = data[i] - '0';
@@ -283,7 +282,6 @@ void Date_Analyzing(char *recv_buf)
         printf("%d ", data_references.data[i]);
     }
     printf("\n");
-    //printf("日期: %s\n", data_references.year);
 }
 
 void Time_Analyzing(char *recv_buf)
@@ -299,8 +297,6 @@ void Time_Analyzing(char *recv_buf)
         printf("%d ", data_references.time[i]);
     }
     printf("\n");
-    // strcpy(data_references.time, time);
-    // printf("时间: %s\n", data_references.time);
 }
 void Battery_Analyzing(char *recv_buf)
 {
@@ -318,8 +314,6 @@ void Battery_Analyzing(char *recv_buf)
         printf("%d ", data_references.battery[i]);
     }
     printf("\n");
-    //data_references.battery = Integer_number;
-    //printf("电量: %d%%\n", data_references.battery);
 
 }
 void State_judgment(char *recv_buf)
