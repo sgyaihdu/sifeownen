@@ -16,7 +16,6 @@
 #include <termios.h>
 #include<sys/select.h>
 
-
 #include "sample_comm.h"
 
 #define MM16_BMP "./res/mm16.bmp"
@@ -61,7 +60,6 @@ static hi_char *g_path_bmp, *g_path_bmp2;
 static pthread_t g_vdec_thread;
 static hi_vo_intf_sync g_rgn_intf_sync = HI_VO_OUT_1080P60;
 static int g_rgn_sample_exit = 0;
-
 
 
 static sample_vdec_attr g_rgn_vdec_cfg = {
